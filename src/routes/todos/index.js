@@ -59,9 +59,8 @@ todosRouter.delete("/delete", (req, res) => {
 
 // PUT - /todos/mark: Mark todo completed
 todosRouter.put("/mark", (req, res) => {
-  console.log(req.query.todosId);
   const { todosId } = req.query;
-  console.log(todosId);
+
   console.log(todos.filter((item) => item.id == todosId));
   const todoToMark = todos.filter((item) => item.id == todosId);
 
@@ -84,14 +83,13 @@ todosRouter.post("/create", (req, res) => {
 
 // GET - /todos/byuserid: All todos from a user
 todosRouter.get("/byuserid", (req, res) => {
-  const userId = parseInt(req.query.userId);
-
-  if (isNaN(userId)) {
-    return res.status(400).json({ error: "Invalid userId" });
+  const todosId = parseInt(req.query.todosId);
+  if (!todosId) {
+    res.status(StatusCodes.BAD_REQUEST).send(ReasonPhrases.BAD_REQUEST);
+    return;
   }
-
-  const userTodos = todos.filter((todo) => todo.userId === userId);
-  res.json({ userTodos });
+  const usertodos = todos.find((item) => item.id === todosId);
+  res.status(StatusCodes.OK).json({ todos: usertodos });
 });
 
 todosRouter.post("/todo", (req, res) => {
